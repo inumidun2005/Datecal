@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Calculator</title>
+  <link rel= "stylesheet" href="dayscal.css" />
+</head>
+<body>
+  <h1 style="color: white">Date Calculator</h1>
+  <form id="date-form">
+    <br><br><br>
+    <label for="startDay">Start Day:</label>
+<input type="number" id="startDay" min="1" max="31" ><br>
+<label for="startMonth">Start Month:</label>
+<input type="number" id="startMonth" min="1" max="12"><br>
+<label for="startYear">Start Year:</label>
+<input type="number" id="startYear"><br><br>
+
+<label for="chosenDay">Chosen Day:</label>
+<input type="number" id="chosenDay" min="1" max="31"><br>
+<label for="chosenMonth">Chosen Month:</label>
+<input type="number" id="chosenMonth" min="1" max="12"><br>
+<label for="chosenYear">Chosen Year:</label>
+<input type="number" id="chosenYear"><br>
+<label id="resultLabel">=</label><br>
+<button id="subtractButton">Subtract Dates</button><br><br><br>
+
+
+ </form>
+ 
+    <style>
+    body {
+  background: linear-gradient(to top, #5105a7, #c305e9);
+}
+
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input, button {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+    }
+    
+    /* Specific styles */
+    .date-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between; /* Align inputs evenly */
+    }
+    
+    .date-input {
+      width: 60px;
+    }
+    
+    #subtractButton {
+      background-color: #4CAF50; /* Green */
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      padding: 10px 20px; /* Increase button size slightly */
+      border: none; /* Remove border for cleaner look */
+    }
+    
+    #subtractButton:hover {
+      background-color: #3e8e41;
+    }
+    
+    #resultLabel {
+      font-weight: bold;
+      margin: 2%;
+      font-size: 30px;
+      color: rgb(243, 17, 149);
+      display:block;
+    }
+
+    #cancelButton:hover {
+    
+        color: white;
+    }
+    </style>
+    <script>
+const subtractButton = document.getElementById("subtractButton");
+const resultLabel = document.getElementById("resultLabel");
+
+subtractButton.addEventListener("click", calculateDaysDifference);
+
+function calculateDaysDifference() {
+  // Get input values
+  const startDay = parseInt(document.getElementById("startDay").value);
+  const startMonth = parseInt(document.getElementById("startMonth").value) - 1; // Months are 0-indexed
+  const startYear = parseInt(document.getElementById("startYear").value);
+
+  const chosenDay = parseInt(document.getElementById("chosenDay").value);
+  const chosenMonth = parseInt(document.getElementById("chosenMonth").value) - 1;
+  const chosenYear = parseInt(document.getElementById("chosenYear").value);
+
+  // Validate input (if NaN, display error)
+  if (
+    isNaN(startDay) ||
+    isNaN(startMonth) ||
+    isNaN(startYear) ||
+    isNaN(chosenDay) ||
+    isNaN(chosenMonth) ||
+    isNaN(chosenYear)
+  ) {
+    resultLabel.textContent = "Invalid input. Please enter valid numbers for all dates.";
+    return; // Exit function if input is invalid
+  }
+
+  // Sanitize input for days (1-31 or appropriate for month)
+  const maxDaysInStartMonth = new Date(startYear, startMonth + 1, 0).getDate(); // Get last day of start month
+  const maxDaysInChosenMonth = new Date(chosenYear, chosenMonth + 1, 0).getDate();
+  const sanitizedStartDay = Math.min(startDay, maxDaysInStartMonth);
+  const sanitizedChosenDay = Math.min(chosenDay, maxDaysInChosenMonth);
+
+  // Create Date objects
+  const startDate = new Date(startYear, startMonth, sanitizedStartDay);
+  const chosenDate = new Date(chosenYear, chosenMonth, sanitizedChosenDay);
+
+  // Calculate difference in milliseconds
+  const differenceInMilliseconds = Math.abs(startDate.getTime() - chosenDate.getTime());
+
+  // Convert to days considering leap years
+  const daysDifference = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+
+  // Format and display the result
+  resultLabel.textContent = `Days between dates: ${daysDifference}`;
+}
+
+
+
+
+
+
+        </script>
+    </body>
